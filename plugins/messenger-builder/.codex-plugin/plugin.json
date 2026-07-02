@@ -1,0 +1,6 @@
+{
+  "name": "messenger-builder",
+  "version": "1.0.0",
+  "description": "Reusable workflows for bootstrapping, customizing, securing, and deploying a self-hosted Tinode-based messenger.",
+  "skills": "./skills/"
+}

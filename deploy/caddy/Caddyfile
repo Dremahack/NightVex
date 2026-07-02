@@ -1,0 +1,14 @@
+{
+	email {$CADDY_EMAIL}
+}
+
+{$TINODE_DOMAIN} {
+	encode zstd gzip
+
+	reverse_proxy tinode:6060 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

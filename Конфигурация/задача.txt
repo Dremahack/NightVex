@@ -1,0 +1,512 @@
+You are working on the NightVex messenger project based on Tinode.
+
+Main goal:
+Turn this project into a stable self-hosted messenger with web, Android, and later iOS support. The app must support normal Telegram-like 1-on-1 messaging, group chats, easier user discovery, QR sharing, Android push notifications, and 1-on-1 voice/video calls.
+
+Do not rewrite the whole project. Work incrementally. Make small, reviewable commits or change groups. Before changing behavior, inspect the existing implementation and document what already works, what is broken, and what needs to be added.
+
+Project priorities:
+
+1. Local development first
+2. Fix broken or unsafe production issues
+3. Make 1-on-1 messaging work properly
+4. Fix group chat permissions
+5. Fix user search and discovery
+6. Fix QR code sharing and joining
+7. Enable push notifications for Android
+8. Enable 1-on-1 voice and video calls
+9. Add geolocation sharing if available, otherwise implement safe MVP location sharing
+10. Prepare Android app preview and build instructions
+11. Keep production deployment separate from local development
+
+Important safety rules:
+
+* Do not commit real secrets.
+* Do not commit .env files with real values.
+* Do not commit Firebase service accounts, google-services.json, GoogleService-Info.plist, private keys, signing keys, database dumps, SSL certificates, or TURN credentials.
+* Use .env.example or placeholder config files.
+* Never log passwords, access tokens, private messages, phone numbers, emails, exact user locations, Firebase tokens, or auth credentials.
+* Do not delete production data.
+* Do not modify the production VPS directly unless explicitly instructed.
+* Preserve existing Tinode protocol compatibility unless there is no other option.
+* Prefer configuration changes over protocol changes.
+* Preserve Russian localization and add Russian UI text where needed.
+
+Phase 1 — Audit the current project
+
+Inspect the repository and produce a short audit file:
+
+docs/NIGHTVEX_AUDIT.md
+
+Check:
+
+* Is this project based on Tinode server, Tinode webapp, Tindroid Android, or a custom wrapper?
+* Which repositories or folders exist: server, webapp, android, ios, deploy?
+* What is currently deployed or referenced as vshp-project.ru?
+* Are there old names such as VSHP, VШП Project, admin/admin12345, operator/operator12345, user/user12345, demo credentials, test users, seed users, or old branding?
+* Are there hardcoded production URLs?
+* Are there hardcoded API keys or Firebase keys?
+* Are there .env files committed?
+* Are WebSocket URLs correct for local and production?
+* Is HTTPS/WSS used in production?
+* Are old demo pages still present?
+* Are app title, manifest, favicon, launcher icon, package name, and visible app name changed to NightVex?
+
+If demo credentials exist anywhere, remove them from public UI/docs/seed files and replace with safe placeholders. Do not delete real database users unless explicitly instructed.
+
+Phase 2 — Prepare local development
+
+Create or update:
+
+deploy/docker-compose.local.yml
+deploy/.env.local.example
+docs/LOCAL_DEVELOPMENT.md
+.gitignore
+
+Local environment must support:
+
+* Tinode server
+* PostgreSQL
+* Web client
+* Android client configuration
+* Optional local TURN server later, if needed for call testing
+
+Use local placeholders:
+
+* Database: tinode
+* User: tinode
+* Password: change_me_local_only
+* Server URL: http://localhost:6060
+* WebSocket local URL: ws://localhost:6060
+* Production URL placeholder: https://vshp-project.ru
+* Production WebSocket URL placeholder: wss://vshp-project.ru
+
+Add instructions for:
+
+* Windows + WSL2
+* macOS
+* Linux
+* Docker Desktop
+* Android Studio emulator
+* Physical Android phone with USB debugging
+
+Do not change production deployment while preparing local development.
+
+Phase 3 — Fix branding and cleanup
+
+Make NightVex the visible app identity.
+
+Check and update:
+
+* Web app title
+* Favicon
+* Manifest name
+* App display name
+* Login screen
+* Registration screen
+* No-JavaScript fallback page
+* Android app name
+* Android launcher icon placeholders
+* Android splash screen
+* Theme colors
+* Any old VSHP/VШП Project text
+
+Use the NightVex brand:
+
+* Name: NightVex
+* Style: modern, minimalistic, dark, neon accent
+* Primary colors: deep black/navy background, violet/blue accents
+* Keep UI clean and not overloaded
+
+Phase 4 — 1-on-1 messaging like Telegram
+
+Inspect existing Tinode 1-on-1 conversation support.
+
+Goal:
+Users must be able to find each other, open a private 1-on-1 chat, send messages, receive messages, see unread counters, and continue the conversation later.
+
+Tasks:
+
+* Verify whether 1-on-1 topics/conversations are enabled.
+* Verify account discovery settings.
+* Verify contact search and user lookup.
+* Verify that user A can create a direct chat with user B.
+* Verify that user B receives the message/conversation.
+* Verify permissions/ACLs for direct chats.
+* Fix UI flow if starting a 1-on-1 chat is hidden, confusing, or broken.
+* Add a clear button/action: “New chat” / “Новый чат”.
+* Add a search field: “Find user” / “Найти пользователя”.
+* Show search results with display name, username, avatar, and action “Message”.
+* Do not expose private emails/phone numbers unless they are already intended to be public.
+
+Acceptance criteria:
+
+* A newly registered user can find another user.
+* A newly registered user can start a private 1-on-1 chat.
+* Both users can send and receive messages.
+* The chat appears in both users’ chat list.
+* No manual admin action is needed for normal 1-on-1 messaging.
+
+Phase 5 — Fix group chat permissions
+
+Problem:
+After joining a chat/group, users cannot write.
+
+Investigate:
+
+* Is the group actually a read-only channel?
+* Are permissions/ACLs set incorrectly?
+* Are new joiners missing write permissions?
+* Are default access modes wrong?
+* Are users joining as read-only subscribers instead of members?
+* Is the UI creating channels instead of normal writable groups?
+
+Fix:
+
+* Normal groups must allow joined members to write by default.
+* Channels may remain read-only if intentionally created as channels.
+* Add a clear distinction in UI/config between “Group” and “Channel”.
+* Ensure default group permissions include read + write for members.
+* Do not give admin/owner permissions to normal users.
+* Add tests or manual test steps.
+
+Acceptance criteria:
+
+* User creates a normal group.
+* User invites or shares join link/QR.
+* New user joins.
+* New user can send messages.
+* Existing users can see the message.
+
+Phase 6 — QR code sharing and joining
+
+Problem:
+QR code in the app does not work for sharing/adding to chats.
+
+Inspect:
+
+* QR generation code
+* QR scanning code
+* Deep link format
+* Invite link format
+* Android intent filters
+* Web route handling
+* Permissions for camera access
+* Whether QR contains a usable user ID, topic ID, invite token, or URL
+* Whether QR points to production or local URLs incorrectly
+
+Implement or fix:
+
+* User profile QR: lets another user add/open direct chat.
+* Group invite QR: lets another user join a group.
+* Web fallback: QR link opens web app if mobile app is not installed.
+* Android deep link: QR link opens NightVex app if installed.
+* Safe token behavior: do not expose private auth tokens in QR.
+* Expiring invite tokens if supported. If not supported, document limitation.
+
+Recommended QR formats:
+
+* nightvex://user/<public-user-id-or-username>
+* nightvex://topic/<topic-id-or-invite-token>
+* https://vshp-project.ru/invite/user/<public-id>
+* https://vshp-project.ru/invite/group/<invite-token>
+
+Acceptance criteria:
+
+* User A shows profile QR.
+* User B scans QR and can start/open 1-on-1 chat.
+* Group admin/member shows group invite QR.
+* User B scans QR and joins the group with write permission.
+* Invalid/expired QR shows a friendly error.
+
+Phase 7 — Push notifications on smartphones
+
+Goal:
+Android push notifications must work for new messages and missed calls.
+
+Inspect existing Tinode push support:
+
+* Server push configuration
+* FCM support
+* Android google-services.json handling
+* Firebase token registration
+* Notification channels on Android
+* Offline notification behavior
+* Call notification behavior
+
+Implement configuration templates only:
+
+* server/tinode.conf example for FCM
+* deploy/firebase/README.md
+* android/app/google-services.json.example or docs explaining where to place the real file
+* .gitignore rules for google-services.json and service account files
+
+Do not commit real Firebase credentials.
+
+For Android:
+
+* Add instructions to create Firebase project.
+* Add instructions to download google-services.json.
+* Add instructions to place it in the Android app module.
+* Add instructions to rebuild debug APK.
+* Verify notification permission for Android 13+.
+* Verify notification channels.
+* Verify push when app is backgrounded/killed.
+* Verify push for direct messages and group messages.
+* Verify missed call notification if supported.
+
+For server:
+
+* Add FCM config placeholders.
+* Use credentials_file path placeholder or environment variable.
+* Do not embed real JSON credentials.
+
+Acceptance criteria:
+
+* Device registers FCM token.
+* Server sends push notification when recipient is offline.
+* Android receives message notification.
+* Android opens correct chat when notification is tapped.
+* No real credentials are committed.
+
+Phase 8 — 1-on-1 voice and video calls
+
+Goal:
+Enable and test 1-on-1 voice and video calls, not group calls yet.
+
+Inspect:
+
+* Existing WebRTC implementation
+* Android WebRTC dependency
+* Web client call UI
+* iOS call support if present
+* Server signaling support
+* Required Tinode config for video calls
+* STUN/TURN settings
+* Whether calls work locally and in production
+* Whether HTTPS/WSS is required and configured
+
+Implement:
+
+* Enable 1-on-1 audio calls if disabled.
+* Enable 1-on-1 video calls if disabled.
+* Add call buttons to direct chat UI if missing.
+* Hide or disable call buttons in unsupported contexts.
+* Add incoming call UI.
+* Add missed call message/notification if supported.
+* Add permissions handling for microphone/camera.
+* Add Russian UI strings for call actions.
+* Prepare TURN server documentation using coturn.
+* Add deploy/coturn/turnserver.conf.example if useful.
+* Do not commit TURN credentials.
+
+Use:
+
+* STUN for basic testing.
+* TURN/coturn for reliable production use.
+
+Acceptance criteria:
+
+* User A can start voice call to User B.
+* User B receives incoming call.
+* User B can accept/reject.
+* Audio works both ways.
+* User A can start video call to User B.
+* Camera/mic permission prompts work.
+* Call can be ended by either user.
+* App handles missed call.
+* Android receives incoming call notification if app is backgrounded, if supported by current architecture.
+
+Do not implement group calls in this phase. If group calls are requested later, prepare an architecture note comparing LiveKit, Jitsi, Janus, and mediasoup.
+
+Phase 9 — Geolocation sharing
+
+Goal:
+Allow users to share location in a chat if current Tinode/client support exists. If not, implement a safe MVP.
+
+First inspect:
+
+* Is location sharing implemented in current webapp, Android app, iOS app, or server?
+* Are there existing message attachment types for location?
+* Are there existing UI components for maps?
+* Are there permission handlers for geolocation?
+
+If native support exists:
+
+* Enable/fix it.
+* Add UI entry “Share location” / “Поделиться геолокацией”.
+* Add permission handling.
+* Add Russian strings.
+* Add preview card in chat.
+
+If native support does not exist:
+Implement MVP as a custom structured message attachment:
+
+* type: location
+* latitude
+* longitude
+* accuracy optional
+* title optional
+* map_url
+* created_at
+
+Frontend behavior:
+
+* User taps “Share location”.
+* Browser/Android asks permission.
+* App sends location message.
+* Recipient sees a compact map/location card.
+* Tapping opens external map app/browser.
+* Do not continuously track location.
+* Do not implement live location unless separately requested.
+* Do not store more location history than normal message history.
+* Do not log exact coordinates.
+
+Acceptance criteria:
+
+* User can share one-time location in a direct chat.
+* User can share one-time location in a group if group permissions allow writing.
+* Recipient can open the location in a map.
+* If permission is denied, user sees a friendly message.
+* No background tracking is implemented.
+
+Phase 10 — User discovery and easier finding
+
+Improve how users find each other.
+
+Inspect:
+
+* Existing account search
+* Contact integration
+* Username support
+* Phone/email discovery settings
+* Public/private profile fields
+* Invite by SMS/email
+* QR profile sharing
+
+Implement:
+
+* Clear “Find people” screen.
+* Search by username/display name where allowed.
+* Optional exact username search.
+* Profile QR.
+* Copy invite link.
+* Share invite link via system share sheet on Android.
+* Add clear empty states:
+
+  * “No users found”
+  * “Type username to search”
+  * “Scan QR code”
+* Protect privacy: do not list all users publicly unless configured.
+
+Acceptance criteria:
+
+* New user can find another user by username.
+* New user can scan QR to open profile/direct chat.
+* User can copy/share invite link.
+* Search UI is understandable in Russian.
+
+Phase 11 — Android app setup and preview
+
+Prepare Android app for local development and smartphone preview.
+
+Tasks:
+
+* Add docs/ANDROID_DEVELOPMENT.md
+* Explain how to open the Android project in Android Studio.
+* Explain how to run on Android Emulator.
+* Explain how to run on a physical Android phone.
+* Explain USB debugging.
+* Explain how to set server URL to local computer.
+* Explain how to set server URL to production domain.
+* Explain how to build debug APK.
+* Explain how to install APK manually.
+* Explain where to place google-services.json.
+* Explain that real signing keys must not be committed.
+
+For local testing from phone:
+
+* If using emulator, use 10.0.2.2 to access host machine.
+* If using physical phone on same Wi-Fi, use the computer’s LAN IP.
+* If testing HTTPS callbacks/push/deep links, optionally use Cloudflare Tunnel or ngrok.
+* Document which URL mode to use.
+
+Acceptance criteria:
+
+* Developer can run Android app in emulator.
+* Developer can run Android app on phone.
+* App connects to local server.
+* App connects to production server when configured.
+* Debug APK can be built.
+
+Phase 12 — Tests and verification checklist
+
+Create:
+
+docs/TEST_PLAN.md
+
+Include manual test cases:
+
+* Registration
+* Login
+* 1-on-1 chat
+* Group creation
+* Group join
+* New group member can write
+* User search
+* Profile QR
+* Group invite QR
+* Android push notification
+* Voice call 1-on-1
+* Video call 1-on-1
+* Location sharing
+* Web local
+* Android local
+* Production smoke test
+
+Add troubleshooting:
+
+* WebSocket fails
+* Push not received
+* Android app crashes after Firebase config
+* Camera/microphone denied
+* QR opens wrong URL
+* User cannot write in group
+* Cannot find users
+* Mixed content error ws:// on https://
+* CORS or reverse proxy errors
+* TURN/STUN call connection problems
+
+Phase 13 — Suggested improvements, but do not implement without approval
+
+Create:
+
+docs/FUTURE_IMPROVEMENTS.md
+
+Include:
+
+* Full end-to-end encryption review
+* Group calls through LiveKit or Jitsi
+* Better admin panel
+* Abuse reporting/blocking users
+* Rate limiting and anti-spam
+* Account deletion/export
+* Message search
+* Backup and restore
+* Moderation tools for groups
+* Public landing page
+* App store preparation
+* Crash reporting
+* Monitoring and logs
+* GDPR/privacy policy pages
+* Better onboarding
+
+Final output required from Codex:
+
+1. Summary of what was found.
+2. List of implemented fixes.
+3. List of files changed.
+4. Remaining risks.
+5. Manual test checklist.
+6. Clear next steps.
+7. Any required manual actions, especially Firebase, TURN credentials, signing keys, and production secrets.

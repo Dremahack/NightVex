@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-tinode}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/.env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tinode:
+    image: tinode/tinode:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      STORE_USE_ADAPTER: postgres
+      WAIT_FOR: postgres:5432
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-tinode}:${POSTGRES_PASSWORD}@postgres:5432/${TINODE_DB_NAME:-tinode}?sslmode=disable&connect_timeout=10
+      SMTP_HOST_URL: https://${TINODE_DOMAIN:-localhost}
+      MEDIA_HANDLER: fs
+      FS_CORS_ORIGINS: '["https://${TINODE_DOMAIN:-localhost}"]'
+      EXT_STATIC_DIR: /opt/nightvex-web
+      SAMPLE_DATA: ${TINODE_SAMPLE_DATA:-}
+      RESET_DB: ${TINODE_RESET_DB:-false}
+      UPGRADE_DB: ${TINODE_UPGRADE_DB:-false}
+      AUTH_TOKEN_KEY: ${TINODE_AUTH_TOKEN_KEY:?Set TINODE_AUTH_TOKEN_KEY in deploy/.env}
+      UID_ENCRYPTION_KEY: ${TINODE_UID_ENCRYPTION_KEY:?Set TINODE_UID_ENCRYPTION_KEY in deploy/.env}
+      FCM_PUSH_ENABLED: ${FCM_PUSH_ENABLED:-false}
+      FCM_CRED_FILE: ${FCM_CRED_FILE:-}
+      TNPG_PUSH_ENABLED: "false"
+      WEBRTC_ENABLED: "false"
+    volumes:
+      - tinode_uploads:/opt/tinode/uploads
+      - ./secrets:/opt/nightvex/secrets:ro
+      - ../webapp-build:/opt/nightvex-web
+    expose:
+      - "6060"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - tinode
+    environment:
+      TINODE_DOMAIN: ${TINODE_DOMAIN:-localhost}
+      CADDY_EMAIL: ${CADDY_EMAIL:-admin@example.com}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  postgres_data:
+  tinode_uploads:
+  caddy_data:
+  caddy_config:

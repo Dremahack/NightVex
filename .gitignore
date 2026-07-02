@@ -1,0 +1,68 @@
+# Secrets and local environment
+.env
+.env.*
+*.env
+!.env.example
+!deploy/.env.example
+!deploy/.env.local.example
+!deploy/.env.production.example
+доступ.txt
+Доступ.txt
+
+# Local deployment data and backups
+deploy/.env
+deploy/.env.*
+deploy/.env.local
+deploy/secrets/
+!deploy/.env.example
+!deploy/.env.local.example
+!deploy/.env.production.example
+deploy/backups/
+server-backups/
+webapp-partial-backup-*/
+*.sql
+*.dump
+*.bak
+
+# Android secrets
+android/local.properties
+android/keystore.properties
+android/*.jks
+android/*.keystore
+*.jks
+*.keystore
+*.pem
+*.key
+keystore.properties
+android/app/google-services.json
+android/app/src/**/google-services.json
+google-services.json
+GoogleService-Info.plist
+*firebase-adminsdk*.json
+*service-account*.json
+service-account.json
+firebase-credentials.json
+*service_account*.json
+turnserver.secret
+backups/
+data/
+uploads/
+
+# Logs and runtime files
+*.log
+logs/
+tmp/
+temp/
+
+# Dependencies and build output
+node_modules/
+dist/
+build/
+coverage/
+webapp-build/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

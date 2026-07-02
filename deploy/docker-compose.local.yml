@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tinode}
+      POSTGRES_USER: ${POSTGRES_USER:-tinode}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_local_only}
+    ports:
+      - "5432:5432"
+    volumes:
+      - nightvex_local_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  tinode:
+    image: tinode/tinode:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      STORE_USE_ADAPTER: postgres
+      EXT_CONFIG: /etc/tinode/tinode.conf
+      WAIT_FOR: postgres:5432
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-tinode}:${POSTGRES_PASSWORD:-change_me_local_only}@postgres:5432/${POSTGRES_DB:-postgres}?sslmode=disable&connect_timeout=10
+      SMTP_HOST_URL: http://localhost:${LOCAL_HTTP_PORT:-6060}
+      MEDIA_HANDLER: fs
+      FS_CORS_ORIGINS: '["http://localhost:6060","http://127.0.0.1:6060","http://10.0.2.2:6060"]'
+      EXT_STATIC_DIR: /opt/nightvex-web
+      RESET_DB: ${TINODE_RESET_DB:-true}
+      UPGRADE_DB: ${TINODE_UPGRADE_DB:-false}
+      SAMPLE_DATA: ${TINODE_SAMPLE_DATA:-}
+      AUTH_TOKEN_KEY: ${TINODE_AUTH_TOKEN_KEY:-MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=}
+      UID_ENCRYPTION_KEY: ${TINODE_UID_ENCRYPTION_KEY:-MDEyMzQ1Njc4OWFiY2RlZg==}
+      FCM_PUSH_ENABLED: ${FCM_PUSH_ENABLED:-false}
+      FCM_CRED_FILE: ${FCM_CRED_FILE:-}
+      TNPG_PUSH_ENABLED: "false"
+      WEBRTC_ENABLED: ${WEBRTC_ENABLED:-true}
+    ports:
+      - "${LOCAL_HTTP_PORT:-6060}:6060"
+    volumes:
+      - ./tinode.local.conf:/etc/tinode/tinode.conf:ro
+      - nightvex_local_uploads:/opt/tinode/uploads
+      - ../webapp-build:/opt/nightvex-web
+
+volumes:
+  nightvex_local_postgres:
+  nightvex_local_uploads:
