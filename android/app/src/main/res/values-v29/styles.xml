@@ -16,6 +16,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/nightvexMuted</item>
         <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="actionMenuTextColor">@color/nightvexText</item>
+        <item name="android:actionMenuTextColor">@color/nightvexText</item>
+        <item name="panelMenuListTheme">@style/AppTheme.PopupOverlay</item>
         <item name="android:enforceNavigationBarContrast">false</item>
         <item name="android:enforceStatusBarContrast">false</item>
         <item name="windowNoTitle">true</item>

@@ -31,6 +31,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/nightvexMuted</item>
         <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="actionMenuTextColor">@color/nightvexText</item>
+        <item name="android:actionMenuTextColor">@color/nightvexText</item>
+        <item name="panelMenuListTheme">@style/AppTheme.PopupOverlay</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
@@ -44,7 +47,21 @@
         <item name="android:textColorHint">@color/grey</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat">
+        <item name="android:textColorPrimary">@color/nightvexBg</item>
+        <item name="android:textColorSecondary">@color/colorDarkGray</item>
+        <item name="android:textColor">@color/nightvexBg</item>
+        <item name="colorControlNormal">@color/nightvexBg</item>
+        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.NightVex.PopupMenu</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.NightVex.PopupMenu</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.NightVex.PopupMenu</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/TextAppearance.NightVex.PopupMenu</item>
+    </style>
+
+    <style name="TextAppearance.NightVex.PopupMenu" parent="@style/TextAppearance.AppCompat.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/nightvexBg</item>
+        <item name="android:textColorPrimary">@color/nightvexBg</item>
+    </style>
 
     <style name="PreferenceThemeOverlay">
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
