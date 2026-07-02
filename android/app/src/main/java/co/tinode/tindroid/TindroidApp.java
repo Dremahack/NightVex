@@ -129,7 +129,7 @@ public class TindroidApp extends Application implements DefaultLifecycleObserver
     }
 
     public static boolean getDefaultTLS() {
-        return !BuildConfig.DEBUG && !isEmulator();
+        return "vshp-project.ru".equalsIgnoreCase(getDefaultHostName());
     }
 
     public static void retainCache(Cache cache) {
@@ -258,6 +258,9 @@ public class TindroidApp extends Application implements DefaultLifecycleObserver
             editor.putString(Utils.PREFS_HOST_NAME, getDefaultHostName());
             editor.putBoolean(Utils.PREFS_USE_TLS, getDefaultTLS());
             editor.apply();
+        } else if ("vshp-project.ru".equalsIgnoreCase(pref.getString(Utils.PREFS_HOST_NAME, null)) &&
+                !pref.getBoolean(Utils.PREFS_USE_TLS, getDefaultTLS())) {
+            pref.edit().putBoolean(Utils.PREFS_USE_TLS, true).apply();
         }
 
         // Set UI mode.

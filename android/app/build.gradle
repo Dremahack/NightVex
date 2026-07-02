@@ -52,7 +52,7 @@ android {
 
     buildTypes {
         debug {
-            resValue "string", "default_host_name", '"10.0.2.2:6060"'
+            resValue "string", "default_host_name", '"vshp-project.ru"'
         }
         release {
             resValue "string", "default_host_name", '"vshp-project.ru"'
