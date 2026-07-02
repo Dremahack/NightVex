@@ -258,9 +258,17 @@ public class TindroidApp extends Application implements DefaultLifecycleObserver
             editor.putString(Utils.PREFS_HOST_NAME, getDefaultHostName());
             editor.putBoolean(Utils.PREFS_USE_TLS, getDefaultTLS());
             editor.apply();
-        } else if ("vshp-project.ru".equalsIgnoreCase(pref.getString(Utils.PREFS_HOST_NAME, null)) &&
-                !pref.getBoolean(Utils.PREFS_USE_TLS, getDefaultTLS())) {
-            pref.edit().putBoolean(Utils.PREFS_USE_TLS, true).apply();
+        } else {
+            String hostName = pref.getString(Utils.PREFS_HOST_NAME, null);
+            if ("10.0.2.2:6060".equalsIgnoreCase(hostName)) {
+                pref.edit()
+                        .putString(Utils.PREFS_HOST_NAME, "vshp-project.ru")
+                        .putBoolean(Utils.PREFS_USE_TLS, true)
+                        .apply();
+            } else if ("vshp-project.ru".equalsIgnoreCase(hostName) &&
+                    !pref.getBoolean(Utils.PREFS_USE_TLS, getDefaultTLS())) {
+                pref.edit().putBoolean(Utils.PREFS_USE_TLS, true).apply();
+            }
         }
 
         // Set UI mode.

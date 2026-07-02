@@ -2,7 +2,7 @@
 <resources>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://vshp-project.ru/.well-known/assetlinks.json\" }]</string>
     <string name="tinode_url" translatable="false">https://vshp-project.ru</string>
-    <string name="emulator_host_name" translatable="false">10.0.2.2:6060</string>
+    <string name="emulator_host_name" translatable="false">vshp-project.ru</string>
     <string name="contact_us_uri" translatable="false">mailto:support@vshp-project.ru</string>
     <string name="terms_of_use_uri" translatable="false">https://vshp-project.ru/terms.html</string>
     <string name="privacy_policy_uri" translatable="false">https://vshp-project.ru/privacy.html</string>
