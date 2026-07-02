@@ -1,4 +1,4 @@
-# Self-hosted Tinode messenger
+# NightVex
 
 This repository is a local monorepo scaffold for a custom self-hosted messenger based on upstream Tinode.
 
@@ -6,22 +6,18 @@ Planned layout:
 
 - `server/` - Tinode server fork or clone from `https://github.com/tinode/chat.git`
 - `webapp/` - Tinode Web fork or clone from `https://github.com/tinode/webapp.git`
+- `android/` - NightVex Android client based on Tindroid
 - `deploy/` - Docker Compose, reverse proxy, and deployment notes
 - `docs/` - product and customization documentation
 - `scripts/` - helper scripts for local setup and operations
 
 No secrets belong in this repository. Use `.env` files locally and keep committed examples limited to placeholders.
 
-## Bootstrap status
+## Current status
 
-The local scaffold has been created. Clone upstream repositories when Git is available:
+NightVex includes Android, Web, server, deployment scaffolding, QR/App Links docs, Android release signing docs, and Firebase push setup documentation.
 
-```powershell
-git clone https://github.com/tinode/chat.git server
-git clone https://github.com/tinode/webapp.git webapp
-```
-
-Then inspect the upstream build instructions before customizing branding or server behavior.
+Firebase credentials, Android release keystores, production `.env` files, TURN credentials, and VPS secrets must be configured manually outside Git.
 
 ## Russian deployment guide
 
