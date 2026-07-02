@@ -60,8 +60,8 @@ public class FindFragment extends Fragment implements UiUtils.ProgressIndicator,
 
     private static final int LOADER_ID = 104;
 
-    // Minimum allowed length of a search tag (server-enforced).
-    private static final int MIN_TAG_LENGTH = 4;
+    // Minimum allowed length of a search tag if the server limit is not available yet.
+    private static final int DEFAULT_MIN_TAG_LENGTH = 2;
 
     private FndTopic<VxCard> mFndTopic;
     private FndListener mFndListener;
@@ -364,13 +364,14 @@ public class FindFragment extends Fragment implements UiUtils.ProgressIndicator,
         restartLoader(getActivity(), query);
 
         // Query is too short to be sent to the server.
-        if (query != null && query.length() < MIN_TAG_LENGTH) {
+        long minTagLength = Cache.getTinode().getServerLimit(Tinode.MIN_TAG_LENGTH, DEFAULT_MIN_TAG_LENGTH);
+        if (query != null && query.length() < minTagLength) {
             return query;
         }
 
         if (TextUtils.isEmpty(query)) {
             query = Tinode.NULL_VALUE;
-        } else if (!sSingleTagTest.matcher(query).matches()) {
+        } else if (!sSingleTagTest.matcher(query).find()) {
             // No colons, spaces or commas. Try as email, phone, or alias.
             String email = UtilsString.asEmail(query);
             if (email != null) {
