@@ -44,6 +44,8 @@ service-account.json
 firebase-credentials.json
 *service_account*.json
 turnserver.secret
+turnserver.conf
+*.secret
 backups/
 data/
 uploads/

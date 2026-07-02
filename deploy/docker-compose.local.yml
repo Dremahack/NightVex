@@ -26,7 +26,7 @@ services:
       STORE_USE_ADAPTER: postgres
       EXT_CONFIG: /etc/tinode/tinode.conf
       WAIT_FOR: postgres:5432
-      POSTGRES_DSN: postgresql://${POSTGRES_USER:-tinode}:${POSTGRES_PASSWORD:-change_me_local_only}@postgres:5432/${POSTGRES_DB:-postgres}?sslmode=disable&connect_timeout=10
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-tinode}:${POSTGRES_PASSWORD:-change_me_local_only}@postgres:5432/${POSTGRES_DB:-tinode}?sslmode=disable&connect_timeout=10
       SMTP_HOST_URL: http://localhost:${LOCAL_HTTP_PORT:-6060}
       MEDIA_HANDLER: fs
       FS_CORS_ORIGINS: '["http://localhost:6060","http://127.0.0.1:6060","http://10.0.2.2:6060"]'

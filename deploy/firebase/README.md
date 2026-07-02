@@ -28,7 +28,9 @@ cd android
 
 ```env
 FCM_PUSH_ENABLED=true
+FCM_PROJECT_ID=your-firebase-project-id
 FCM_CRED_FILE=/opt/nightvex/secrets/firebase-service-account.json
+FCM_INCLUDE_ANDROID_NOTIFICATION=false
 ```
 
 Не печатать содержимое JSON в логи и не отправлять его в чат.

@@ -56,10 +56,14 @@ Set these in `deploy/.env` on the VPS:
 
 ```env
 FCM_PUSH_ENABLED=true
+FCM_PROJECT_ID=your-firebase-project-id
 FCM_CRED_FILE=/opt/nightvex/secrets/firebase-service-account.json
+FCM_INCLUDE_ANDROID_NOTIFICATION=false
 ```
 
 `deploy/.env.production.example` contains placeholders only. Do not put real JSON contents into `.env` files.
+
+`FCM_CRED_FILE` must point to the path inside the Tinode container. With the current production compose mount, that path is `/opt/nightvex/secrets/firebase-service-account.json`.
 
 ## Tinode FCM config
 
@@ -75,6 +79,10 @@ Use `server/server/tinode.fcm.example.conf` as a safe template. Keep Android not
 ```
 
 Data-only Android push lets `FBaseMessagingService` create the notification and attach the correct topic to the tap intent.
+
+In `deploy/docker-compose.yml`, `EXT_CONFIG` is not set, so the Tinode Docker image generates runtime config from its bundled template and consumes `FCM_PUSH_ENABLED`, `FCM_CRED_FILE`, `FCM_PROJECT_ID`, and `FCM_INCLUDE_ANDROID_NOTIFICATION`.
+
+If you mount a full custom Tinode config with `EXT_CONFIG`, those env vars are not enough. Add the FCM section to the mounted config file directly, using `server/server/tinode.fcm.example.conf` as a placeholder-only reference.
 
 ## Windows PowerShell build commands
 
@@ -124,3 +132,17 @@ Release APK signing still requires local `android/keystore.properties` and a loc
 - If notification tap opens the chat list, confirm the FCM payload has `topic`.
 - If Android 13+ receives no visible notification, confirm the user granted notification permission.
 - If local builds fail after adding `google-services.json`, download it again for the exact package name.
+
+## Logs
+
+Android logcat:
+
+```powershell
+adb logcat | findstr /i "firebase fcm nightvex tinode push notification"
+```
+
+Server logs:
+
+```powershell
+docker compose --env-file deploy/.env -f deploy/docker-compose.yml logs -f
+```

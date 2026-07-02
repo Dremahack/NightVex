@@ -9,7 +9,7 @@ Date: 2026-07-02.
 - `android/` exists and contains Android/Tindroid code.
 - `deploy/` exists with Docker Compose, Caddy/Nginx placeholders, local Tinode config, Firebase notes, backup scripts, and coturn example.
 - iOS source is not present.
-- This folder is not currently a Git repository, so changes cannot be reviewed with `git diff` until Git is initialized or the folder is placed in a repository.
+- This folder is now a Git monorepo connected to `https://github.com/Dremahack/NightVex`.
 
 ## Confirmed in source
 
@@ -55,6 +55,16 @@ Date: 2026-07-02.
 - Added safe Tinode FCM config template with data-only Android notifications.
 - Added manual push tests to `docs/TEST_PLAN.md`.
 
+## Fixed in deploy/config stabilization phase
+
+- Production PostgreSQL database defaults now use `POSTGRES_DB=tinode` and `TINODE_DB_NAME=tinode`.
+- Production `POSTGRES_DSN` points to the same database PostgreSQL creates.
+- Production `WEBRTC_ENABLED` is environment-driven and defaults to `false` until the calls/TURN phase.
+- Production compose passes `FCM_PROJECT_ID` and `FCM_INCLUDE_ANDROID_NOTIFICATION=false` to Tinode.
+- FCM runtime wiring is documented: production compose uses Tinode image config generation because it does not set `EXT_CONFIG`.
+- The `EXT_CONFIG` caveat is documented: when a custom Tinode config is mounted, FCM must be configured in that file directly.
+- Production deployment docs now include Firebase secret placement, compose validation, log checks, HTTPS/WebSocket checks, and Git ignore checks.
+
 ## Still allowed internally
 
 Internal Java package names, SDK class names, protocol names, upstream README/license text, and comments may still contain `Tinode`. Do not blindly rename those because they are part of upstream code and can break builds.
@@ -64,5 +74,9 @@ Internal Java package names, SDK class names, protocol names, upstream README/li
 - Install the rebuilt APK and inspect login, registration, settings, about, invite, QR, notification, and call screens.
 - Confirm that `https://vshp-project.ru/.well-known/assetlinks.json` is hosted with real release certificate fingerprints.
 - Configure Firebase credentials outside Git.
+- Run a real Firebase push test with physical Android devices after adding `android/app/google-services.json` and Firebase service account JSON outside Git.
+- Build a signed release APK with a local keystore.
 - Configure TURN/coturn outside Git.
 - Test user discovery, direct chats, group write permissions, QR join, calls, push, and location on real devices.
+- Upload production `assetlinks.json` with real release SHA256 fingerprints.
+- Replace raw group topic-id QR invites with invite-token backend before public production use.

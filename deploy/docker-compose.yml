@@ -3,7 +3,7 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-tinode}
       POSTGRES_USER: ${POSTGRES_USER:-tinode}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/.env}
     volumes:
@@ -35,8 +35,10 @@ services:
       UID_ENCRYPTION_KEY: ${TINODE_UID_ENCRYPTION_KEY:?Set TINODE_UID_ENCRYPTION_KEY in deploy/.env}
       FCM_PUSH_ENABLED: ${FCM_PUSH_ENABLED:-false}
       FCM_CRED_FILE: ${FCM_CRED_FILE:-}
+      FCM_PROJECT_ID: ${FCM_PROJECT_ID:-}
+      FCM_INCLUDE_ANDROID_NOTIFICATION: ${FCM_INCLUDE_ANDROID_NOTIFICATION:-false}
       TNPG_PUSH_ENABLED: "false"
-      WEBRTC_ENABLED: "false"
+      WEBRTC_ENABLED: ${WEBRTC_ENABLED:-false}
     volumes:
       - tinode_uploads:/opt/tinode/uploads
       - ./secrets:/opt/nightvex/secrets:ro

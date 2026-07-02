@@ -63,7 +63,7 @@
 
 1. Add real `android/app/google-services.json` outside Git.
 2. Add real Firebase service account JSON outside Git.
-3. Set `FCM_PUSH_ENABLED=true` and `FCM_CRED_FILE=/opt/nightvex/secrets/firebase-service-account.json` in `deploy/.env`.
+3. Set `FCM_PUSH_ENABLED=true`, `FCM_PROJECT_ID=<firebase-project-id>`, `FCM_CRED_FILE=/opt/nightvex/secrets/firebase-service-account.json`, and `FCM_INCLUDE_ANDROID_NOTIFICATION=false` in `deploy/.env`.
 4. Build and install debug APK on a physical Android phone.
 5. Log in as User B on Android.
 6. On Android 13+, grant notification permission.
