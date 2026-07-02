@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ru.nightvex.messenger",
+      "sha256_cert_fingerprints": [
+        "DEBUG_CERT_SHA256_PLACEHOLDER",
+        "RELEASE_CERT_SHA256_PLACEHOLDER"
+      ]
+    }
+  }
+]

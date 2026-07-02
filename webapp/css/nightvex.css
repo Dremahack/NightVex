@@ -1,0 +1,118 @@
+:root {
+  --nv-bg: #050713;
+  --nv-surface: #0d1020;
+  --nv-surface-2: #151a2f;
+  --nv-surface-3: #101831;
+  --nv-primary: #28d8ff;
+  --nv-accent: #8b4dff;
+  --nv-text: #f7f8ff;
+  --nv-muted: #99a3c7;
+  --nv-alert: #ff5f8f;
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select {
+  font-family: "Inter", "Manrope", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+.panel-title,
+.title,
+#dummy-view h2 {
+  font-family: "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(139, 77, 255, 0.18), transparent 32rem),
+    radial-gradient(circle at 86% 0%, rgba(40, 216, 255, 0.16), transparent 30rem),
+    var(--nv-bg);
+}
+
+#root,
+#mountPoint {
+  background: transparent;
+}
+
+#logo {
+  filter: drop-shadow(0 0 18px rgba(40, 216, 255, 0.28));
+}
+
+.nightvex-logo-lockup {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--nv-text);
+  cursor: default;
+  text-decoration: none;
+}
+
+.nightvex-logo-lockup h2 {
+  color: var(--nv-text);
+  text-shadow: 0 0 18px rgba(40, 216, 255, 0.22);
+}
+
+.info-box.error {
+  align-items: flex-start;
+  gap: 0.2rem;
+  background: linear-gradient(135deg, rgba(16, 24, 49, 0.98), rgba(24, 18, 48, 0.98));
+  border-bottom: 1px solid rgba(40, 216, 255, 0.34);
+  box-shadow: inset 3px 0 0 var(--nv-alert), 0 12px 30px rgba(0, 0, 0, 0.24);
+  color: var(--nv-text);
+  font-weight: 500;
+}
+
+.info-box.error > span {
+  color: var(--nv-text);
+}
+
+.info-box.error .icon .material-icons {
+  color: var(--nv-alert);
+  text-shadow: 0 0 14px rgba(255, 95, 143, 0.36);
+}
+
+.info-box.error .cancel .material-icons {
+  color: rgba(247, 248, 255, 0.72);
+}
+
+.info-box.error .cancel:hover .material-icons {
+  color: #fff;
+}
+
+.panel-form button.primary,
+button.primary,
+.dialog-buttons button.primary {
+  background: linear-gradient(135deg, var(--nv-accent), var(--nv-primary));
+  border-color: transparent;
+  color: #fff;
+}
+
+.panel-form button.primary:hover,
+button.primary:hover,
+.dialog-buttons button.primary:hover {
+  filter: brightness(1.08);
+}
+
+.lettertile.nightvex-auth,
+img.avatar.nightvex-auth {
+  background: linear-gradient(135deg, rgba(139, 77, 255, 0.36), rgba(40, 216, 255, 0.26));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 10px 28px rgba(25, 38, 95, 0.26);
+}
+
+.message-panel .mine .message-content,
+.bubble-me {
+  background: linear-gradient(135deg, #7447ff, #14c8f5);
+}
+
+#title-panel,
+#topic-caption-panel {
+  border-bottom-color: rgba(139, 77, 255, 0.24);
+}

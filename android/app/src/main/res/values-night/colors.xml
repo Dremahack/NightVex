@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorMessageBubbleMine">#FF151A2F</color>
+    <color name="colorMessageBubbleMineFlashing">#FF28D8FF</color>
+    <color name="colorMessageBubbleMineFlashingLight">#FF8B4DFF</color>
+    <color name="colorMessageBubbleOther">#FF101831</color>
+    <color name="colorMessageBubbleOtherFlashing">#FF294D78</color>
+    <color name="colorMessageBubbleOtherFlashingLight">#FF25315F</color>
+
+    <color name="colorReplyBubble">#10CCCCCC</color>
+    <color name="colorReplyText">#CCCCCC</color>
+
+    <color name="colorNegativeAction">#983220</color>
+    <color name="colorPositiveAction">#326F3E</color>
+    <color name="colorNeutralAction">#555555</color>
+    <color name="colorSwipeChervon">#AAAAAA</color>
+
+    <!-- Audio waveform color -->
+    <color name="waveform">#60CCCCCC</color>
+    <color name="waveformPast">#80FFFFFF</color>
+
+    <color name="colorChipBackground">#263238</color>
+    <color name="colorChipBorder">#546E7A</color>
+
+    <color name="colorListDivider">#666666</color>
+
+    <color name="colorAccent">#28D8FF</color>
+
+    <color name="colorDanger">#d32f2f</color>
+
+    <color name="colorOffline">#999900</color>
+
+    <color name="colorImagePreviewBg">#333333</color>
+
+    <color name="colorImagePlaceholder">#212121</color>
+
+    <color name="circularProgressBg">#FF666666</color>
+    <color name="circularProgressFg">#FFCCCCCC</color>
+
+    <color name="colorImageMetaPanel">#80000000</color>
+</resources>
