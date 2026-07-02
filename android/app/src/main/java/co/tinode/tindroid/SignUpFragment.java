@@ -22,7 +22,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -69,6 +72,23 @@ public class SignUpFragment extends Fragment
                     mThumbTakePhotoLauncher.launch(null);
                 }
             });
+
+    private static String[] makeDiscoveryTags(@NonNull String login, @NonNull String fullName) {
+        Set<String> tags = new LinkedHashSet<>();
+        String normalizedLogin = login.toLowerCase(Locale.ROOT);
+        tags.add(Tinode.TAG_ALIAS + normalizedLogin);
+        tags.add(normalizedLogin);
+
+        for (String part : fullName.toLowerCase(Locale.ROOT).split("[^\\p{L}\\p{N}_.]+")) {
+            if (part.length() >= 2) {
+                tags.add(part);
+            }
+            if (tags.size() >= 8) {
+                break;
+            }
+        }
+        return tags.toArray(new String[]{});
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -299,7 +319,7 @@ public class SignUpFragment extends Fragment
                                 MetaSetDesc<VxCard, String> meta = new MetaSetDesc<>(theCard, null);
                                 meta.attachments = theCard.getPhotoRefs();
                                 return tinode.createAccountBasic(
-                                        login, password, true, null, meta,
+                                        login, password, true, makeDiscoveryTags(login, fullName), meta,
                                         credentials.toArray(new Credential[]{}));
                             }
                         })

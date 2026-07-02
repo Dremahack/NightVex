@@ -87,6 +87,18 @@ Date: 2026-07-02.
 - `https://vshp-project.ru/` returns HTTP 200; `https://vshp-project.ru/v0/channels` returns HTTP 403 without API key, as expected.
 - The production VPS is a manual deployment directory, not currently a Git checkout; production changes were made directly with local backups of `deploy/.env` and `deploy/docker-compose.yml`.
 
+## Fixed in discovery/blocking push test phase
+
+- Android sign-up now sends safe public discovery tags for new users: `alias:<login>`, `<login>`, and words from display name.
+- Android group creation now derives group search tags from the group title when the tags field is empty.
+- Existing production users were reindexed on the VPS so Android search can find them by login/alias-style query.
+- Existing production groups were reindexed from their public group titles.
+- Production DB backups were created before discovery tag migration:
+  - `server-backups/nightvex-before-discovery-tags-20260702-095235.sql`
+  - `server-backups/nightvex-before-discovery-tags-20260702-095310.sql`
+  - `server-backups/nightvex-before-discovery-tags-20260702-095343.sql`
+- After migration, production `usertags` contains 12 rows and `topictags` contains 7 rows.
+
 ## Still allowed internally
 
 Internal Java package names, SDK class names, protocol names, upstream README/license text, and comments may still contain `Tinode`. Do not blindly rename those because they are part of upstream code and can break builds.

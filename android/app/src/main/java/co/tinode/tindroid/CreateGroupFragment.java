@@ -18,7 +18,10 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
+import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -81,6 +84,19 @@ public class CreateGroupFragment extends Fragment implements UtilsMedia.MediaPre
                 mContactsAdapter.setContactsPermissionGranted();
                 restartLoader((StartChatActivity) getActivity());
             });
+
+    private static String titleToTags(String title) {
+        Set<String> tags = new LinkedHashSet<>();
+        for (String part : title.toLowerCase(Locale.ROOT).split("[^\\p{L}\\p{N}_.]+")) {
+            if (part.length() >= 2) {
+                tags.add(part);
+            }
+            if (tags.size() >= 8) {
+                break;
+            }
+        }
+        return String.join(",", tags);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -183,7 +199,10 @@ public class CreateGroupFragment extends Fragment implements UtilsMedia.MediaPre
                 pcomment = pcomment.substring(0, Const.MAX_TITLE_LENGTH);
             }
 
-            final String tags = ((EditText) activity.findViewById(R.id.editTags)).getText().toString();
+            String tags = ((EditText) activity.findViewById(R.id.editTags)).getText().toString();
+            if (TextUtils.isEmpty(tags.trim())) {
+                tags = titleToTags(topicTitle);
+            }
 
             boolean isChannel = ((SwitchCompat) activity.findViewById(R.id.isChannel)).isChecked();
             String[] members = mSelectedAdapter.getAdded();
