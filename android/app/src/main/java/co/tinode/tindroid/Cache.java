@@ -159,6 +159,13 @@ public class Cache {
                     String token = task.getResult();
                     if (sInstance.mTinode != null) {
                         sInstance.mTinode.setDeviceToken(token)
+                                .thenApply(new PromisedReply.SuccessListener<>() {
+                                    @Override
+                                    public PromisedReply<ServerMessage> onSuccess(ServerMessage result) {
+                                        Log.d(TAG, "FCM token reported to server.");
+                                        return null;
+                                    }
+                                })
                                 .thenCatch(new PromisedReply.FailureListener<>() {
                                     @Override
                                     public <E extends Exception> PromisedReply<ServerMessage> onFailure(E err) {

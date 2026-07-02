@@ -67,16 +67,17 @@
 4. Build and install debug APK on a physical Android phone.
 5. Log in as User B on Android.
 6. On Android 13+, grant notification permission.
-7. Background or close the app.
-8. Log in as User A on another device or web client.
-9. Send User B a direct message.
-10. Verify User B receives a push notification.
-11. Tap it and verify the correct direct chat opens.
-12. Send User B a group message in a normal group.
-13. Verify User B receives a group push notification.
-14. Tap it and verify the correct group opens.
-15. If call push is enabled, test a missed 1-on-1 call notification.
-16. Confirm no Firebase credentials were committed.
+7. Verify logcat shows `FCM token reported to server.` and does not show raw Tinode auth JSON.
+8. Background or close the app.
+9. Log in as User A on another device or web client.
+10. Send User B a direct message.
+11. Verify User B receives a push notification.
+12. Tap it and verify the correct direct chat opens.
+13. Send User B a group message in a normal group.
+14. Verify User B receives a group push notification.
+15. Tap it and verify the correct group opens.
+16. If call push is enabled, test a missed 1-on-1 call notification.
+17. Confirm no Firebase credentials were committed.
 
 ## Pending feature test areas
 

@@ -874,7 +874,7 @@ public class Tinode {
         if (message == null || message.isEmpty())
             return;
 
-        Log.d(TAG, "in: " + message);
+        Log.d(TAG, "in: packet received");
 
         mNotifier.onRawMessage(message);
 
@@ -2095,7 +2095,7 @@ public class Tinode {
         if (mConnection == null || !mConnection.isConnected()) {
             throw new NotConnectedException("No connection");
         }
-        Log.d(TAG, "out: " + message);
+        Log.d(TAG, "out: packet sent");
         mConnection.send(message);
     }
 

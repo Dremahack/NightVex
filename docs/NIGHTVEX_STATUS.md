@@ -54,6 +54,8 @@ Date: 2026-07-02.
 - Added production FCM placeholders and ignored `deploy/secrets/`.
 - Added safe Tinode FCM config template with data-only Android notifications.
 - Added manual push tests to `docs/TEST_PLAN.md`.
+- Redacted Android Tinode SDK packet logs so auth JSON, session tokens, and device tokens are not written to logcat.
+- Added a safe Android log line for successful FCM token registration: `FCM token reported to server.`
 
 ## Fixed in deploy/config stabilization phase
 
@@ -65,6 +67,16 @@ Date: 2026-07-02.
 - The `EXT_CONFIG` caveat is documented: when a custom Tinode config is mounted, FCM must be configured in that file directly.
 - Production deployment docs now include Firebase secret placement, compose validation, log checks, HTTPS/WebSocket checks, and Git ignore checks.
 
+## Verified on physical Android device
+
+- Debug APK with local `google-services.json` installed successfully on Samsung device `R5CY502596Y`.
+- App opened to `ChatsActivity` after login.
+- Android notification permission is granted.
+- Firebase initialized from local `android/app/google-services.json`.
+- Android app reported its FCM token to the Tinode server; logcat showed `FCM token reported to server.`
+- Tinode debug packet logs no longer include raw protocol JSON.
+- This verifies Android-side FCM token registration only. End-to-end push delivery still requires production server Firebase credentials to be deployed outside Git.
+
 ## Still allowed internally
 
 Internal Java package names, SDK class names, protocol names, upstream README/license text, and comments may still contain `Tinode`. Do not blindly rename those because they are part of upstream code and can break builds.
@@ -73,8 +85,8 @@ Internal Java package names, SDK class names, protocol names, upstream README/li
 
 - Install the rebuilt APK and inspect login, registration, settings, about, invite, QR, notification, and call screens.
 - Confirm that `https://vshp-project.ru/.well-known/assetlinks.json` is hosted with real release certificate fingerprints.
-- Configure Firebase credentials outside Git.
-- Run a real Firebase push test with physical Android devices after adding `android/app/google-services.json` and Firebase service account JSON outside Git.
+- Deploy Firebase service account JSON on the production server outside Git.
+- Run a real end-to-end Firebase push delivery test with two users after production FCM credentials are active.
 - Build a signed release APK with a local keystore.
 - Configure TURN/coturn outside Git.
 - Test user discovery, direct chats, group write permissions, QR join, calls, push, and location on real devices.

@@ -112,18 +112,19 @@ Release APK signing still requires local `android/keystore.properties` and a loc
 1. Install the debug APK on a physical Android phone as User B.
 2. Log in as User B.
 3. On Android 13+, allow notification permission when prompted.
-4. Background or close the app.
-5. Log in as User A on another phone or web client.
-6. Send User B a direct message.
-7. Verify User B receives a push notification.
-8. Tap the notification and verify the direct chat opens.
-9. Add both users to a normal group.
-10. Background User B again.
-11. Send a group message as User A.
-12. Verify User B receives a group push notification.
-13. Tap it and verify the correct group opens.
-14. Start a 1-on-1 call and let it become missed, if current call push is enabled on the server.
-15. Confirm no Firebase credential files appear in source control.
+4. In logcat, verify `FCM token reported to server.` without exposing the token value.
+5. Background or close the app.
+6. Log in as User A on another phone or web client.
+7. Send User B a direct message.
+8. Verify User B receives a push notification.
+9. Tap the notification and verify the direct chat opens.
+10. Add both users to a normal group.
+11. Background User B again.
+12. Send a group message as User A.
+13. Verify User B receives a group push notification.
+14. Tap it and verify the correct group opens.
+15. Start a 1-on-1 call and let it become missed, if current call push is enabled on the server.
+16. Confirm no Firebase credential files appear in source control.
 
 ## Troubleshooting
 
@@ -138,8 +139,16 @@ Release APK signing still requires local `android/keystore.properties` and a loc
 Android logcat:
 
 ```powershell
-adb logcat | findstr /i "firebase fcm nightvex tinode push notification"
+adb logcat -s FirebaseApp FirebaseInitProvider FirebaseMessaging FBaseMessagingService TindroidApp Cache Tinode
 ```
+
+Expected safe Android-side token registration line:
+
+```text
+Cache: FCM token reported to server.
+```
+
+Tinode SDK debug logs are intentionally redacted to `packet sent` and `packet received`; raw protocol JSON must not appear in logcat because it can contain auth tokens.
 
 Server logs:
 
